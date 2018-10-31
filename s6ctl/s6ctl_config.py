@@ -1,7 +1,11 @@
 import os
 import socket
 
-S6_HOME = os.getenv('S6_HOME', os.path.join(os.path.expanduser('~'), 'S6'))
+# this is S6/s6ctl/s6ctl_config.py file, get 'S6' repo dir from it
+file_path = os.path.dirname(os.path.abspath(__file__)) # S6/s6ct
+s6_dir = os.path.abspath(os.path.join(file_path, os.pardir)) # S6
+S6_HOME = os.getenv('S6_HOME', s6_dir)
+
 HUGEPAGES_PATH = os.getenv('HUGEPAGES_PATH', '/dev/hugepages')
 SOCKDIR = '/tmp/bessd'
 IMAGE = 'ubuntu:latest'
