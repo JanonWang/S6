@@ -11,3 +11,4 @@ test/bin
 test/test_result/
 !deps/Makefile.*
 *.vim
+.vscode/
