@@ -6,6 +6,7 @@ sudo apt install build-essential
 sudo apt install python-clang-3.6
 sudo apt install libclang-3.6-dev
 sudo apt install libpcre3-dev
+sudo apt install unzip
 ```
 
 ## Step 2: In S6 project root, run:
@@ -27,9 +28,17 @@ sudo apt-get install -y software-properties-common
 sudo apt-add-repository -y ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get install -y ansible
-ansible-playbook -i localhost, -c local env/build-dep.yml
+ansible-playbook -i localhost, -c local env/build-dep.yml  # This step fails when ansible excute "Install gRPC and its requirements (from source)" due to the GreatWall firewall in China. Thus, we delelte the block named "Install gRPC and its requirements (from source)" in build-dep.yml and install gRPC manually using the following commands
+# ------- Start installing gRPC manually --------
+sudo apt-get install -y autoconf libtool cmake
+cd /tmp && git clone --recurse-submodules -j4 https://github.com/google/grpc
+cd grpc && make -j`nproc` EXTRA_CFLAGS='-Wno-error' HAS_SYSTEM_PROTOBUF=false
+make install
+cd ./third_party/protobuf && make install
+cd ../benchmark && cmake . && make install
+ldconfig
+# ------- Finish install gRPC --------
 ansible-playbook -i localhost, -c local env/runtime.yml  # if you want to run BESS on the same machine.
-pip install protobuf
 sudo reboot
 ```
 
